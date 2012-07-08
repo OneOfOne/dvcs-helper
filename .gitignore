@@ -1,0 +1,4 @@
+.dvcs-helper
+site/
+logs/
+nginx.conf
