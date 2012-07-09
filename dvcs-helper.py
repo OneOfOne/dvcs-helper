@@ -27,6 +27,7 @@ except ImportError:
 
 __version__ = 0.9
 
+DEVNULL = open('/dev/null', 'wb')
 def _exec(args, strip_all = True):
 	if not isinstance(args, list):
 		args = args.split(' ')
@@ -82,16 +83,15 @@ def _err(*args):
 
 def _dvcs_root(dvcs_type):
 	if dvcs_type == 'git':
-		return _exec('git rev-parse --show-toplevel 2>/dev/null')[0]
+		return _exec('git rev-parse --show-toplevel')[0]
 	elif dvcs_type == 'hg':
-		return _exec('hg root  2>/dev/null')[0]
+		return _exec('hg root')[0]
 	else:
 		raise RemoteHelperException('Unknown dvcs_type')
 
 def _detect_dvcs():
 	cwd = os.getcwd()
-	try:
-		return ['hg', osp.exists('.hg/') and cwd or _dvcs_root('hg')]
+	try: return ['hg', osp.exists('.hg/') and cwd or _dvcs_root('hg')]
 	except: pass
 
 	try: return ['git', osp.exists('.git/') and cwd or _dvcs_root('git')]
