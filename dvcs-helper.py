@@ -194,8 +194,11 @@ class RemoteHelper(object):
 				hfiles[sp] = Properties(php_writable=False, fpath=f, hash=sha1_file(f))
 		else:
 			for f in self.dvcs_changed_files(rev):
-				sp = _spath(self.cfg.root, self.cfg.base, f)
-				hfiles[sp] = Properties(php_writable=False, fpath=f, hash=sha1_file(f))
+				try:
+					sp = _spath(self.cfg.root, self.cfg.base, f)
+					hfiles[sp] = Properties(php_writable=False, fpath=f, hash=sha1_file(f))
+				except IOError:
+					print('Ignoring : %s' % f, file=sys.stderr);
 
 		yield len(hfiles), None
 		if nocheck:
